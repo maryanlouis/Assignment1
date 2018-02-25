@@ -1,0 +1,208 @@
+<?xml version="1.0"?>
+<flowgorithm fileversion="1.7">
+    <attributes>
+        <attribute name="name" value=""/>
+        <attribute name="authors" value="95200"/>
+        <attribute name="about" value=""/>
+        <attribute name="saved" value="26/02/2018 01:18:59 &#1589;"/>
+    </attributes>
+    <function name="Main" type="None" variable="">
+        <parameters/>
+        <body>
+            <call expression="compressFun()"/>
+            <call expression="decompressFun()"/>
+        </body>
+    </function>
+    <function name="compNum" type="String" variable="compNum">
+        <parameters>
+            <parameter name="numl" type="String" array="False"/>
+        </parameters>
+        <body>
+            <declare name="index" type="Integer" array="False" size="" variables="index"/>
+            <assign variable="index" expression="0"/>
+            <declare name="decimalVal" type="Integer" array="False" size="" variables="decimalVal"/>
+            <declare name="compNum" type="String" array="False" size="" variables="compNum"/>
+            <while expression="index&lt;len(numl)-1">
+                <assign variable="decimalVal" expression="(numl[index]-'0')*10+(numl[index+1]-'0')"/>
+                <if expression="decimalVal==10">
+                    <then>
+                        <assign variable="decimalVal" expression="100"/>
+                        <assign variable="compNum" expression="compNum+(char)decimalVal"/>
+                        <assign variable="index" expression="index+2"/>
+                    </then>
+                    <else/>
+                </if>
+            </while>
+            <if expression="index==len(numl)-1">
+                <then>
+                    <assign variable="compNum" expression="compNum+'}'+numl[index]"/>
+                </then>
+                <else/>
+            </if>
+        </body>
+    </function>
+    <function name="compressFun" type="None" variable="">
+        <parameters/>
+        <body>
+            <declare name="line" type="String" array="False" size="" variables="line"/>
+            <declare name="prevname" type="String" array="False" size="" variables="prevname"/>
+            <declare name="prevname" type="String" array="False" size="" variables="prevname"/>
+            <declare name="number" type="String" array="False" size="" variables="number"/>
+            <comment text="input file idBook(&quot;idbook.txt&quot;)&#13;&#10;output file idBookcomp(&quot;idbookcomp.txt&quot;)"/>
+            <if expression="idBook.is_open() &amp;&amp; idBookcomp.is_open()">
+                <then>
+                    <call expression="getline(idBook,line)"/>
+                    <assign variable="name" expression="line.substr(0,line.find(&quot;\t&quot;))"/>
+                    <assign variable="number" expression="line.substr(line.find(&quot;\t&quot;)+1)"/>
+                    <output expression="name"/>
+                    <output expression="number"/>
+                    <output expression="name+&quot;\t&quot;"/>
+                    <comment text="in idBookcomp file"/>
+                    <output expression="compNum(number)+&quot;\n&quot;"/>
+                    <comment text="in idBookcomp file"/>
+                    <assign variable="prevname" expression="name"/>
+                    <while expression="getline(idBook,line)">
+                        <assign variable="name" expression="line.substr(0,line.find(&quot;\t&quot;))"/>
+                        <assign variable="number" expression="line.substr(line.find(&quot;\t&quot;)+1)"/>
+                        <output expression="name"/>
+                        <output expression="number"/>
+                        <output expression="compStr(prevname,name)+&quot;\t&quot;"/>
+                        <comment text="in idBookcomp file"/>
+                        <output expression="compNum(number)+&quot;\n&quot;"/>
+                        <comment text="in idBookcomp file"/>
+                    </while>
+                    <call expression="idBookcomp.close()"/>
+                    <call expression="idBook.close()"/>
+                </then>
+                <else>
+                    <output expression="&quot;can't open file&quot;"/>
+                </else>
+            </if>
+        </body>
+    </function>
+    <function name="compStr" type="String" variable="(char)(counter+'0')+strCur.substr(counter)">
+        <parameters>
+            <parameter name="strPr" type="String" array="False"/>
+            <parameter name="strCur" type="Integer" array="False"/>
+        </parameters>
+        <body>
+            <declare name="counter" type="Integer" array="False" size="" variables="counter"/>
+            <assign variable="counter" expression="0"/>
+            <while expression="counter&lt;len(strPr) &amp;&amp; counter&lt;len(strCur)">
+                <if expression="strCur[counter]== strPr[counter]">
+                    <then>
+                        <assign variable="counter" expression="counter+1"/>
+                    </then>
+                    <else/>
+                </if>
+            </while>
+            <if expression="counter==0">
+                <then>
+                    <comment text="return strCur"/>
+                </then>
+                <else/>
+            </if>
+        </body>
+    </function>
+    <function name="decompNum" type="String" variable="">
+        <parameters>
+            <parameter name="compnum" type="String" array="False"/>
+        </parameters>
+        <body>
+            <declare name="index" type="Integer" array="False" size="" variables="index"/>
+            <assign variable="index" expression="0"/>
+            <declare name="decimalVal" type="Integer" array="False" size="" variables="decimalVal"/>
+            <declare name="chr1" type="String" array="False" size="" variables="chr1"/>
+            <comment text="char chr1"/>
+            <declare name="chr2" type="String" array="False" size="" variables="chr2"/>
+            <comment text="char chr2"/>
+            <declare name="decompNum" type="String" array="False" size="" variables="decompNum"/>
+            <while expression="index&lt;len(compnum)">
+                <assign variable="decimalVal" expression="compnum[index]"/>
+                <if expression="decimalVal==100">
+                    <then>
+                        <assign variable="decimalVal" expression="10"/>
+                    </then>
+                    <else/>
+                </if>
+                <assign variable="chr1" expression="(decimalVal/10)+'0'"/>
+                <assign variable="chr2" expression="(decimalVal%10)+'0'"/>
+                <assign variable="decompNum" expression="decompNum+chr1+chr2"/>
+                <assign variable="index" expression="index+1"/>
+                <if expression="index==len(compnum)-2">
+                    <then>
+                        <if expression="compnum[index]=='}'">
+                            <then>
+                                <comment text="Return decompNum+compnum[index+1]"/>
+                            </then>
+                            <else/>
+                        </if>
+                    </then>
+                    <else/>
+                </if>
+            </while>
+            <comment text="Return decompNum"/>
+        </body>
+    </function>
+    <function name="decompressFun" type="None" variable="">
+        <parameters/>
+        <body>
+            <declare name="line" type="String" array="False" size="" variables="line"/>
+            <declare name="prevname" type="String" array="False" size="" variables="prevname"/>
+            <declare name="name" type="String" array="False" size="" variables="name"/>
+            <declare name="number" type="String" array="False" size="" variables="number"/>
+            <comment text="input file idBookcomp(&quot;idbookcomp.txt&quot;)"/>
+            <comment text="output file idBookdecomp(&quot;idbookdecomp.txt&quot;)"/>
+            <if expression="idBookdecomp.is_open() &amp;&amp; idBookcomp.is_open()">
+                <then>
+                    <call expression="getline(idBookcomp,line)"/>
+                    <assign variable="name" expression="line.substr(0,line.find(&quot;\t&quot;))"/>
+                    <assign variable="number" expression="line.substr(line.find(&quot;\t&quot;)+1)"/>
+                    <output expression="name"/>
+                    <output expression="decompNum(number)"/>
+                    <output expression="name+&quot;\t&quot;"/>
+                    <comment text="in idBookdecomp file"/>
+                    <output expression="decompNum(number)+&quot;\n&quot;"/>
+                    <comment text="in idBookdecomp file"/>
+                    <assign variable="prevname" expression="name"/>
+                    <while expression="getline(idBookcomp,line)">
+                        <assign variable="name" expression="line.substr(0,line.find(&quot;\t&quot;))"/>
+                        <assign variable="number" expression="line.substr(line.find(&quot;\t&quot;)+1)"/>
+                        <output expression="decompStr(prevname,name)+&quot;\t&quot;"/>
+                        <comment text="in idBookdecomp file"/>
+                        <output expression="decompNum(number)+&quot;\n&quot;"/>
+                        <comment text="in idBookdecomp file"/>
+                        <output expression="decompStr(prevname,name)"/>
+                        <output expression="decompNum(number)"/>
+                        <assign variable="prevname" expression="decompStr(prevname,name)"/>
+                    </while>
+                    <call expression="idBookcomp.close()"/>
+                    <call expression="idBookdecomp.close()"/>
+                </then>
+                <else>
+                    <output expression="&quot;can't open file&quot;"/>
+                </else>
+            </if>
+        </body>
+    </function>
+    <function name="decompStr" type="String" variable="">
+        <parameters>
+            <parameter name="strPr" type="String" array="False"/>
+            <parameter name="strCur" type="Integer" array="False"/>
+        </parameters>
+        <body>
+            <if expression="strCur[0]&lt;='9'">
+                <then>
+                    <declare name="counter" type="Integer" array="False" size="" variables="counter"/>
+                    <assign variable="counter" expression="strCur[0]-'0'"/>
+                    <declare name="dename" type="String" array="False" size="" variables="dename"/>
+                    <assign variable="dename" expression="strPr.substr(0,counter)"/>
+                    <comment text="Return dename+strCur.substr(1)"/>
+                </then>
+                <else>
+                    <comment text="Return strCur"/>
+                </else>
+            </if>
+        </body>
+    </function>
+</flowgorithm>
